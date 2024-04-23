@@ -34,3 +34,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - ERROR messages show up when in IP Mode, Need to fix
 - Enhance the user interface for better usability.
 - Add a Pause button, Right now source needs to pause
+- Make this stuff a Bundle or self contained package
