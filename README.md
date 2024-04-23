@@ -32,5 +32,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## TODO
 
 - ERROR messages show up when in IP Mode, Need to fix
-- Need to take inputs from ini file instead of HARD CODED files
 - Enhance the user interface for better usability.
+- Add a Pause button, Right now source needs to pause

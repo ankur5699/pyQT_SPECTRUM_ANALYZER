@@ -130,8 +130,6 @@ except:
     print("Already Binded with port")
 
 
-def resetTimings(*args):
-    elapsed.clear()
 
 
 
@@ -194,16 +192,18 @@ def update(
 
 @interactor.decorate(
     useOpenGL={'readonly': not args.allow_opengl_toggle},
-    curvePen={'type': 'pen'}
+    curvePen_data={'type': 'pen'},
+    curvePen_spectrum={'type': 'pen'}
 )
 def updateOptions(
-    curvePen=pg.mkPen(),
+    curvePen_data=pg.mkPen(),
+    curvePen_spectrum=pg.mkPen(),
     useOpenGL=True,
 ):
     pg.setConfigOption('useOpenGL', useOpenGL)
-    curve.setPen(curvePen)
+    curve.setPen(curvePen_data)
+    curve_fft.setPen(curvePen_spectrum)
 
-params.sigTreeStateChanged.connect(resetTimings)
 
 makeData()
 
