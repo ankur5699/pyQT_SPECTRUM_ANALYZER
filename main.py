@@ -4,8 +4,8 @@ Update a simple plot as rapidly as possible to measure speed.
 """
 
 import argparse
-from collections import deque
-from time import perf_counter
+from configparser import ConfigParser
+
 
 import numpy as np
 
@@ -17,7 +17,7 @@ import scipy
 import socket
 import sine_lut
 
-DEBUG = False
+
 
 # defaults here result in the same configuration as the original PlotSpeedTest
 parser = argparse.ArgumentParser()
@@ -29,8 +29,7 @@ parser.add_argument('--frames', default=50, type=int)
 parser.add_argument('--fsample', default=1000, type=float)
 parser.add_argument('--frequency', default=0, type=float)
 parser.add_argument('--amplitude', default=5, type=float)
-parser.add_argument('--ip_address', default="192.168.1.100", type=str)
-parser.add_argument('--port', default=5006, type=int)
+parser.add_argument('--ini', default="./config.ini", type=str)
 parser.add_argument('--opengl', dest='use_opengl', action='store_true')
 parser.add_argument('--no-opengl', dest='use_opengl', action='store_false')
 parser.set_defaults(use_opengl=None)
@@ -47,6 +46,14 @@ if args.use_opengl is not None:
 sfmt = QtGui.QSurfaceFormat()
 sfmt.setSwapInterval(0)
 QtGui.QSurfaceFormat.setDefaultFormat(sfmt)
+config = ConfigParser()
+config.read(args.ini)
+ip_address = config.get('Network', 'ip_address')
+port = config.get('Network', 'port')
+DEBUG = (config.get('PLOT_INFO', 'DEBUG'))
+fs = int(config.get('PLOT_INFO', 'Sampling_rate'))
+
+
 
 
 class MonkeyCurveItem(pg.PlotCurveItem):
@@ -111,9 +118,10 @@ pw1.setLabel('bottom', 'Frequency', units='Hz')
 
 sine_wave = sine_lut.sine_wave
 low_pass = sine_lut.low_pass
+DEBUG = DEBUG == 'True'
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-server_address = ('192.168.1.100', 5006)
+server_address = (ip_address, port)
 data_prev = np.array(sine_wave[:2048]).astype(np.int32)
 sock.setblocking(False)
 try:
@@ -131,10 +139,8 @@ def resetTimings(*args):
     nest=True,
     nsamples={'limits': [0, None]},
     Sampling_FREQ={'units': 'Hz'},
-    ip_address={'ip_address': ''},
-    port={'PORT': ''}
 )
-def makeData(nsamples=2048, Sampling_FREQ=30720000):
+def makeData(nsamples=2048, Sampling_FREQ=fs):
     global T, t, xf, fs, N 
     fs = Sampling_FREQ
     N = nsamples
