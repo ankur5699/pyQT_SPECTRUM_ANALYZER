@@ -122,12 +122,12 @@ DEBUG = DEBUG == 'True'
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_address = (ip_address, port)
-data_prev = np.array(sine_wave[:2048]).astype(np.int32)
+data_prev = np.zeros(2048).astype(np.int32)
 sock.setblocking(False)
 try:
     sock.bind(server_address)
 except:
-    print("Already Binded with port")
+    print(f"Already Bound with port : {port}")
 
 
 
@@ -146,12 +146,6 @@ def makeData(nsamples=2048, Sampling_FREQ=fs):
     T = nsamples * dt
     t = np.linspace(0.0, nsamples/Sampling_FREQ, nsamples)
     xf = np.linspace(0.0, (1.0*Sampling_FREQ)/(2.0), nsamples//2)
-    # pw.setXRange(0,T)
-    # pw.setYRange(-500,500)
-    # pw1.setXRange(0,fs//2)
-    # pw1.setYRange(0,(10**4))
-
-
 
     
 
@@ -174,8 +168,12 @@ def update(
             stream, _ = sock.recvfrom(2 * N) 
             data = np.frombuffer(stream, dtype=np.int16)
             data_prev = data
-        except TimeoutError:
+        except (TimeoutError,BlockingIOError,OSError):
             data = data_prev
+        
+
+
+            
         
             
                             
