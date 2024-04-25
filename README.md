@@ -11,8 +11,11 @@ This repository contains a spectrum analyzer built using pyqtgraph. It allows yo
   - There is a DEBUG flag that can be turned on if you only want to preview the plot and layout without performing any actual analysis.
 
 ## Getting Started
-1. Clone this repository: "git clone "https://github.com/ankur5699/pyQT_SPECTRUM_ANALYZER.git"
+1. Clone this repository: git clone "https://github.com/ankur5699/pyQT_SPECTRUM_ANALYZER.git"
 2. pip install -r requirements.txt
+
+For more info on pyqtgraphs
+https://github.com/pyqtgraph/pyqtgraph
 
 
 ## Usage
@@ -27,11 +30,8 @@ Contributions are welcome! Feel free to submit pull requests or open issues.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+Who cares, Do as you wish
 
 ## TODO
 
-- ERROR messages show up when in IP Mode, Need to fix
-- Enhance the user interface for better usability.
-- Add a Pause button, Right now source needs to pause
-- Make this stuff a Bundle or self contained package
+Will be listed in issues from now
