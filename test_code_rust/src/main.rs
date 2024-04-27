@@ -9,10 +9,20 @@ fn main() -> io::Result<()> {
 
     //Variables
     let frequency:f64 = 10000.0; //Hz
-
     let sampling_freq:f64 = 30.0 * ((1000000) as f64);
+
+    //Test Signal Generated
     let signal_buffer = sine_array(sampling_freq, frequency);
-    println!("{:?}",signal_buffer);
+    //println!("{:?}",signal_buffer);
+
+    //We have succesfully recieved an array, but it contains floating point values
+    //We convert them to 16 bit hex values, and then send them as bytes on 127.0.0.1:5006
+
+    let quantized_buffer = convert2hex_16bit(signal_buffer);
+    println!("{:?}",quantized_buffer);
+    
+    //We have Converted the signal to 16 bit values
+    //To send this as a packet, we need to send this as bytes (u8), So we split the packets
 
 
 
@@ -53,3 +63,21 @@ fn sine_array(fs:f64, freq:f64) -> [f64; NUM_SAMPLES]{
     }
     return buffer;
 }
+
+fn convert2hex_16bit(buffer:[f64; NUM_SAMPLES]) -> [i16; NUM_SAMPLES]{
+    //MIN = -32768 and MAX = 32767
+    let min:i32 = -32768;
+    let max:i32 = 32767;
+    let mut quantized_buffer = [0 as i16; NUM_SAMPLES];
+
+    for i in 0..NUM_SAMPLES{
+       let quantized1:i32 = (buffer[i] * (max as f64)) as i32;
+       let quantized2:i32 = if quantized1 > max {max} else {quantized1};
+       let quantized3:i16 = if quantized2 < min {min as i16} else {quantized2 as i16};
+       quantized_buffer[i] = quantized3;
+
+    } 
+    return quantized_buffer;
+}
+
+
